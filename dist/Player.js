@@ -71,10 +71,11 @@ class Player extends tiny_typed_emitter_1.TypedEmitter {
         const queue = this.getQueue(oldState.guild.id);
         if (!queue)
             return;
-        if (oldState.channelId && newState.channelId && oldState.channelId !== newState.channelId) {
+        if (oldState.channelId && newState && oldState.channelId !== newState.channelId) { // NOWE 
+        //if (oldState.channelId && newState.channelId && oldState.channelId !== newState.channelId) { // STARE
             if ((queue === null || queue === void 0 ? void 0 : queue.connection) && newState.member.id === newState.guild.me.id)
                 queue.connection.channel = newState.channel;
-            if (newState.member.id === newState.guild.me.id || (newState.member.id !== newState.guild.me.id && oldState.channelId === queue.connection.channel.id)) {
+            if (queue.connection.channel && newState.member.id === newState.guild.me.id || (newState.member.id !== newState.guild.me.id && oldState.channelId === queue.connection.channel?.id)) {
                 if (!Util_1.Util.isVoiceEmpty(queue.connection.channel))
                     return;
                 const timeout = setTimeout(() => {
@@ -109,6 +110,7 @@ class Player extends tiny_typed_emitter_1.TypedEmitter {
                 }
             }
             if (oldState.member.id === this.client.user.id && !newState.channelId) {
+                queue.connection.channel = oldState.channel;
                 queue.destroy();
                 return void this.emit("botDisconnect", queue);
             }
